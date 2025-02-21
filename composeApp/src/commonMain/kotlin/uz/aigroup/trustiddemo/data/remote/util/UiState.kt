@@ -1,11 +1,11 @@
 package uz.aigroup.trustiddemo.data.remote.util
 
 sealed class UiState<out T> where T : Any? {
-    data class Success<T>(val data: T? = null) : UiState<T>()
+    data class Success<T>(val data: T? = null, val statusCode: Int) : UiState<T>()
     data class Failure(val message: String) : UiState<Nothing>()
 
     companion object {
-        fun <T> success(data: T? = null): Success<T> = Success(data)
+        fun <T> success(data: T? = null, statusCode: Int): Success<T> = Success(data, statusCode)
         fun failure(message: String) = Failure(message)
     }
 }

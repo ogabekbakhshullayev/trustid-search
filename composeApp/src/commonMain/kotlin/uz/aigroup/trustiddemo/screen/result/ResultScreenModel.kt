@@ -1,36 +1,81 @@
 package uz.aigroup.trustiddemo.screen.result
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import uz.aigroup.trustiddemo.data.remote.request.SearchRequest
+import uz.aigroup.trustiddemo.data.remote.util.onFailure
+import uz.aigroup.trustiddemo.data.remote.util.onSuccess
+import uz.aigroup.trustiddemo.data.repository.SearchRepository
+import uz.aigroup.trustiddemo.platform.SharedImage
 
-class ResultScreenModel : StateScreenModel<ResultState>(ResultState()) {
+class ResultScreenModel : StateScreenModel<ResultState>(ResultState()), KoinComponent {
 
-    private val stateData = MutableStateFlow(ResultState())
+    private val repository by inject<SearchRepository>()
 
     fun onEvent(event: ResultEvent) {
         when (event) {
-            is ResultEvent.Idle -> setstate()
-            is ResultEvent.Search -> search()
+            is ResultEvent.Search -> search(event.groupId, event.sharedImage)
+            is ResultEvent.Idle -> setState()
         }
     }
 
-    private fun setstate(
+    private fun search(
+        groupId: String,
+        sharedImage: SharedImage,
+    ) {
+        setState(loading = true)
+
+        screenModelScope.launch {
+            val base64 = sharedImage.toBase64()
+            val request = SearchRequest(
+                cameraPhoto = base64,
+                groupId = groupId,
+            )
+
+            repository.search(request).collectLatest {
+                it onSuccess {
+                    searchResult(data?.taskId)
+                } onFailure {
+                    setState(errorMessage = message)
+                }
+            }
+        }
+    }
+
+    private fun searchResult(taskId: String?) {
+        setState(loading = true)
+
+        screenModelScope.launch {
+            repository.searchResult(taskId).collectLatest {
+                it onSuccess {
+                    if (statusCode == 202) {
+                        searchResult(taskId)
+                    } else {
+                        setState(result = data?.state)
+                    }
+                } onFailure {
+                    setState(errorMessage = message)
+                }
+            }
+        }
+    }
+
+    private fun setState(
         loading: Boolean = false,
         errorMessage: String? = null,
-        succeeded: Boolean = false,
+        result: String? = null,
     ) {
-        stateData.update {
+        mutableState.update {
             it.copy(
                 loading = loading,
                 errorMessage = errorMessage,
-                succeeded = succeeded
+                result = result
             )
         }
-    }
-
-    private fun search() {
-        mutableState.update { it.copy(loading = true) }
-
     }
 }

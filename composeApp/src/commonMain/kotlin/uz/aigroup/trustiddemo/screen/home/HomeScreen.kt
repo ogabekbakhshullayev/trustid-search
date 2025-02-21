@@ -14,12 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberNavigatorScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
+import uz.aigroup.trustiddemo.platform.SharedImage
 import uz.aigroup.trustiddemo.platform.rememberCameraManager
+import uz.aigroup.trustiddemo.screen.result.ResultEvent
+import uz.aigroup.trustiddemo.screen.result.ResultScreen
+import uz.aigroup.trustiddemo.screen.result.ResultScreenModel
 import uz.aigroup.trustiddemo.ui.designsystem.component.AppBackground
 import uz.aigroup.trustiddemo.ui.designsystem.component.AppFilledButton
 import uz.aigroup.trustiddemo.ui.designsystem.component.AppTextField
@@ -36,12 +41,24 @@ object HomeScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
+        val resultScreenModel = navigator.rememberNavigatorScreenModel { ResultScreenModel() }
+
         val screenModel = rememberScreenModel { HomeScreenModel() }
         val state by screenModel.state.collectAsState()
 
         HomeScreenContent(
             state = state,
-            event = screenModel::onEvent
+            event = screenModel::onEvent,
+            onImage = { sharedImage ->
+                resultScreenModel.onEvent(
+                    ResultEvent.Search(
+                        groupId = state.groupId,
+                        sharedImage = sharedImage
+                    )
+                )
+
+                navigator.push(ResultScreen)
+            }
         )
     }
 
@@ -49,6 +66,7 @@ object HomeScreen : Screen {
     private fun HomeScreenContent(
         state: HomeState,
         event: (HomeEvent) -> Unit,
+        onImage: (SharedImage) -> Unit,
     ) {
         val coroutineScope = rememberCoroutineScope()
         val factory = rememberPermissionsControllerFactory()
@@ -58,7 +76,7 @@ object HomeScreen : Screen {
 
         BindPermissionsEffect(controller)
 
-        val cameraManager = rememberCameraManager { }
+        val cameraManager = rememberCameraManager { onImage(it) }
 
         AppBackground {
             Column(

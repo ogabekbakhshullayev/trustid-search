@@ -6,14 +6,14 @@ import io.ktor.utils.io.errors.IOException
 
 object ErrorHandler {
 
-    fun resolveException(throwable: Throwable? = null): UiState.Failure {
-        val message = when (throwable) {
+    fun resolveException(cause: Throwable? = null): UiState.Failure {
+        val message = when (cause) {
             is SocketTimeoutException,
             is ConnectTimeoutException,
             is IOException,
             -> ErrorMessages.NetworkError
 
-            else -> throwable?.message ?: ErrorMessages.InternalError
+            else -> cause?.message ?: ErrorMessages.InternalError
         }
 
         return UiState.failure(message)

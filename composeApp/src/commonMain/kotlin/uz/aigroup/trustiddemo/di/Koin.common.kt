@@ -7,7 +7,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
-import uz.aigroup.trustiddemo.data.repository.VerificationRepository
+import uz.aigroup.trustiddemo.data.repository.SearchRepository
 import uz.aigroup.trustiddemo.data.store.AppSettings
 
 expect fun platformModule(): Module
@@ -25,7 +25,7 @@ fun initKoin() = initKoin {}
 
 fun commonModule() = module {
     singleOf(::AppSettings)
-    singleOf(::VerificationRepository)
+    singleOf(::SearchRepository)
 }
 
 fun reloadKoinModules() {

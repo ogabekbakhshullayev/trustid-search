@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.model.rememberNavigatorScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -42,8 +41,6 @@ object ResultScreen : Screen {
 
         val screenModel = navigator.rememberNavigatorScreenModel { ResultScreenModel() }
         val state by screenModel.state.collectAsState()
-
-        LifecycleEffect(onStarted = { screenModel.onEvent(ResultEvent.Idle) })
 
         AppBackground {
             when {
@@ -119,55 +116,55 @@ object ResultScreen : Screen {
                     }
                 }
 
-//                !state.result.isNullOrEmpty() -> {
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .safeDrawingPadding()
-//                            .padding(24.dp),
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        verticalArrangement = Arrangement.Center,
-//                    ) {
-//                        Box(
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            val composition by rememberLottieComposition {
-//                                LottieCompositionSpec.JsonString(
-//                                    Res.readBytes("files/success.json").decodeToString()
-//                                )
-//                            }
-//
-//                            Image(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .aspectRatio(1f),
-//                                contentDescription = "Success animation",
-//                                painter = rememberLottiePainter(
-//                                    composition = composition,
-//                                    iterations = 1
-//                                ),
-//                            )
-//                        }
-//
-//                        Spacer(modifier = Modifier.height(16.dp))
-//
-//                        Text(
-//                            text = state.result.orEmpty(),
-//                            fontSize = 24.sp,
-//                            fontWeight = FontWeight.Medium,
-//                        )
-//
-//                        Spacer(modifier = Modifier.height(24.dp))
-//
-//                        AppFilledButton(
-//                            text = "Finish",
-//                            onClick = {
-//                                screenModel.onEvent(HomeEvent.Idle)
-//                                navigator.replaceAll(HomeScreen)
-//                            },
-//                        )
-//                    }
-//                }
+                !state.result.isNullOrEmpty() -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .safeDrawingPadding()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            val composition by rememberLottieComposition {
+                                LottieCompositionSpec.JsonString(
+                                    Res.readBytes("files/success.json").decodeToString()
+                                )
+                            }
+
+                            Image(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(1f),
+                                contentDescription = "Success animation",
+                                painter = rememberLottiePainter(
+                                    composition = composition,
+                                    iterations = 1
+                                ),
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = state.result.orEmpty(),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        AppFilledButton(
+                            text = "Finish",
+                            onClick = {
+                                screenModel.onEvent(ResultEvent.Idle)
+                                navigator.replaceAll(HomeScreen)
+                            },
+                        )
+                    }
+                }
 
                 else -> {
                 }

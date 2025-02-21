@@ -9,18 +9,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import uz.aigroup.trustiddemo.data.remote.request.TokenRequest
+import uz.aigroup.trustiddemo.data.remote.request.AccessTokenRequest
 import uz.aigroup.trustiddemo.data.remote.util.onFailure
 import uz.aigroup.trustiddemo.data.remote.util.onSuccess
-import uz.aigroup.trustiddemo.data.repository.VerificationRepository
+import uz.aigroup.trustiddemo.data.repository.SearchRepository
+import uz.aigroup.trustiddemo.data.store.AppSettings
 
 class
-AuthScreenModel(
-    private val username: String,
-    private val password: String,
-) : ScreenModel, KoinComponent {
+AuthScreenModel : ScreenModel, KoinComponent {
 
-    private val repository by inject<VerificationRepository>()
+    private val repository by inject<SearchRepository>()
+    private val appSettings by inject<AppSettings>()
 
     private val stateData = MutableStateFlow(AuthState())
     val state = stateData.asStateFlow()
@@ -28,8 +27,8 @@ AuthScreenModel(
     init {
         stateData.update {
             it.copy(
-                username = username,
-                password = password
+                username = "boxAdmin",
+                password = "P@\$\$w0rd"
             )
         }
     }
@@ -56,13 +55,15 @@ AuthScreenModel(
 
         screenModelScope.launch {
             repository.auth(
-                TokenRequest(
+                AccessTokenRequest(
                     login = state.value.username,
                     password = state.value.password
                 )
             ).collectLatest {
                 it onSuccess {
-                    setState(succeeded = true)
+                    appSettings.setAccessToken(data?.accessToken)
+
+                    setState(succeeded = !data?.accessToken.isNullOrEmpty())
                 } onFailure {
                     setState(errorMessage = message)
                 }

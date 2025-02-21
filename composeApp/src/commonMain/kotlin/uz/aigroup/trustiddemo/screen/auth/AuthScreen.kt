@@ -39,12 +39,7 @@ object AuthScreen : Screen {
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel {
-            AuthScreenModel(
-                username = "spazzlite",
-                password = "P@\$\$w0rd"
-            )
-        }
+        val screenModel = rememberScreenModel { AuthScreenModel() }
         val state by screenModel.state.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow

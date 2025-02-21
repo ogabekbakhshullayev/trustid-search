@@ -1,13 +1,9 @@
 package uz.aigroup.trustiddemo
 
-import android.Manifest
 import android.app.Application
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
@@ -43,19 +39,5 @@ class AppActivity : FragmentActivity(), KoinComponent {
         val onboarding = appSettings.getAccessToken().isEmpty()
 
         setContent { AppContent(onboarding) }
-
-        requestMicrophonePermission()
-    }
-
-    private fun requestMicrophonePermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                1000
-            )
-        }
     }
 }

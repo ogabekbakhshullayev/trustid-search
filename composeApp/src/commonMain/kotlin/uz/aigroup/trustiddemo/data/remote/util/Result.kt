@@ -12,7 +12,7 @@ import uz.aigroup.trustiddemo.data.remote.response.ErrorResponse
 suspend inline fun <reified T> getResult(
     response: HttpResponse,
 ): UiState.Success<T> {
-    return UiState.success(response.body<T>())
+    return UiState.success(response.body<T>(), response.status.value)
 }
 
 suspend infix fun HttpResponse.onSuccess(onSuccess: suspend HttpResponse.() -> Unit): HttpResponse {

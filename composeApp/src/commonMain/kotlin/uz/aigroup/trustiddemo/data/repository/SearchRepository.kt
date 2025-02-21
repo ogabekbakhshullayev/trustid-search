@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import org.koin.core.component.KoinComponent
-import uz.aigroup.piima.data.model.SearchRequest
-import uz.aigroup.trustiddemo.data.remote.request.TokenRequest
+import uz.aigroup.trustiddemo.data.remote.request.AccessTokenRequest
+import uz.aigroup.trustiddemo.data.remote.request.SearchRequest
 import uz.aigroup.trustiddemo.data.remote.response.AccessTokenResponse
 import uz.aigroup.trustiddemo.data.remote.response.ResultResponse
 import uz.aigroup.trustiddemo.data.remote.response.TaskResponse
@@ -24,11 +24,11 @@ import uz.aigroup.trustiddemo.data.remote.util.getResult
 import uz.aigroup.trustiddemo.data.remote.util.onFailure
 import uz.aigroup.trustiddemo.data.remote.util.onSuccess
 
-class VerificationRepository(
+class SearchRepository(
     private val client: HttpClient,
 ) : KoinComponent {
 
-    suspend fun auth(request: TokenRequest): Flow<UiState<AccessTokenResponse>> {
+    suspend fun auth(request: AccessTokenRequest): Flow<UiState<AccessTokenResponse>> {
         return flow {
             client.post {
                 url(HttpRoutes.accessToken)
@@ -55,12 +55,12 @@ class VerificationRepository(
             } onFailure {
                 emit(this)
             }
-        }.catch { exception ->
-            emit(ErrorHandler.resolveException(exception))
+        }.catch { cause ->
+            emit(ErrorHandler.resolveException(cause))
         }
     }
 
-    suspend fun searchResult(taskId: String): Flow<UiState<ResultResponse>> {
+    suspend fun searchResult(taskId: String?): Flow<UiState<ResultResponse>> {
         return flow {
             client.get {
                 url(HttpRoutes.task + "/$taskId")
@@ -71,8 +71,8 @@ class VerificationRepository(
             } onFailure {
                 emit(this)
             }
-        }.catch { exception ->
-            emit(ErrorHandler.resolveException(exception))
+        }.catch { cause ->
+            emit(ErrorHandler.resolveException(cause))
         }
     }
 }
