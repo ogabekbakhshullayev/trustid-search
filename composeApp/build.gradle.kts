@@ -72,11 +72,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "uz.aigroup.trustid.voicecheck"
+        applicationId = "uz.aigroup.trustid.search"
         targetSdk = 34
         minSdk = 27
         versionName = "1.0"
-        versionCode = 21
+        versionCode = 2
     }
 
     sourceSets["main"].apply {

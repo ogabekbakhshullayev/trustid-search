@@ -17,7 +17,7 @@ actual fun platformModule() = module {
         HttpClient(OkHttp) {
             configureKtor(appSettings = get())
             engine {
-                addInterceptor(createChuckerInterceptor(get()))
+//                addInterceptor(createChuckerInterceptor(get()))
             }
         }
     }

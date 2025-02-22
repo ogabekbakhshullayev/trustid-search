@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -68,51 +69,56 @@ object ResultScreen : Screen {
                 }
 
                 !state.errorMessage.isNullOrEmpty() -> {
-                    Column(
+                    LazyColumn(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .safeDrawingPadding()
                             .padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
-                        Box(
-                            contentAlignment = Alignment.Center
-                        ) {
-                            val composition by rememberLottieComposition {
-                                LottieCompositionSpec.JsonString(
-                                    Res.readBytes("files/error.json").decodeToString()
+                        item {
+                            Box(
+                                contentAlignment = Alignment.Center
+                            ) {
+                                val composition by rememberLottieComposition {
+                                    LottieCompositionSpec.JsonString(
+                                        Res.readBytes("files/error.json").decodeToString()
+                                    )
+                                }
+
+                                Image(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f),
+                                    contentDescription = "Error animation",
+                                    painter = rememberLottiePainter(
+                                        composition = composition,
+                                        iterations = Compottie.IterateForever
+                                    ),
                                 )
                             }
-
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(1f),
-                                contentDescription = "Error animation",
-                                painter = rememberLottiePainter(
-                                    composition = composition, iterations = Compottie.IterateForever
-                                ),
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                        item {
+                            Text(
+                                text = state.errorMessage.orEmpty(),
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Medium,
                             )
                         }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = state.errorMessage.orEmpty(),
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Medium,
-                        )
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        AppFilledButton(
-                            text = "Finish",
-                            onClick = {
-                                screenModel.onEvent(ResultEvent.Idle)
-                                navigator.replaceAll(HomeScreen)
-                            },
-                        )
+                        item {
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
+                        item {
+                            AppFilledButton(
+                                text = "Finish",
+                                onClick = {
+                                    screenModel.onEvent(ResultEvent.Idle)
+                                    navigator.replaceAll(HomeScreen)
+                                },
+                            )
+                        }
                     }
                 }
 

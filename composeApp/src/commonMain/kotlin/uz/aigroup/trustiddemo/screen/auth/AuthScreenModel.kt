@@ -14,6 +14,7 @@ import uz.aigroup.trustiddemo.data.remote.util.onFailure
 import uz.aigroup.trustiddemo.data.remote.util.onSuccess
 import uz.aigroup.trustiddemo.data.repository.SearchRepository
 import uz.aigroup.trustiddemo.data.store.AppSettings
+import uz.aigroup.trustiddemo.di.reloadKoinModules
 
 class
 AuthScreenModel : ScreenModel, KoinComponent {
@@ -27,8 +28,8 @@ AuthScreenModel : ScreenModel, KoinComponent {
     init {
         stateData.update {
             it.copy(
-                username = "boxAdmin",
-                password = "P@\$\$w0rd"
+                username = "",
+                password = ""
             )
         }
     }
@@ -62,6 +63,7 @@ AuthScreenModel : ScreenModel, KoinComponent {
             ).collectLatest {
                 it onSuccess {
                     appSettings.setAccessToken(data?.accessToken)
+                    reloadKoinModules()
 
                     setState(succeeded = !data?.accessToken.isNullOrEmpty())
                 } onFailure {

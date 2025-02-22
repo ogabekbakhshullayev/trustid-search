@@ -63,7 +63,7 @@ class SearchRepository(
     suspend fun searchResult(taskId: String?): Flow<UiState<ResultResponse>> {
         return flow {
             client.get {
-                url(HttpRoutes.task + "/$taskId")
+                url(HttpRoutes.task + taskId)
                 contentType(ContentType.Application.Json)
                 parameter("timeout", 5)
             } onSuccess {
