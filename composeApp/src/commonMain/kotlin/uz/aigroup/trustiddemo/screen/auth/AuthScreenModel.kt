@@ -28,8 +28,8 @@ AuthScreenModel : ScreenModel, KoinComponent {
     init {
         stateData.update {
             it.copy(
-                username = "",
-                password = ""
+                username = "kginfocom",
+                password = "DYxtOBzNq8Iwiy!cH3jnMu"
             )
         }
     }

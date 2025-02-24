@@ -75,7 +75,7 @@ android {
         applicationId = "uz.aigroup.trustid.search"
         targetSdk = 34
         minSdk = 27
-        versionCode = 5
+        versionCode = 6
         versionName = "1.0.$versionCode"
     }
 

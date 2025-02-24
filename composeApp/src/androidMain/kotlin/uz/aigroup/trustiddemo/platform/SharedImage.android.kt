@@ -13,7 +13,7 @@ actual class SharedImage(private val bitmap: Bitmap) {
 
     actual suspend fun toBase64(): String {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream)
         val bytes = byteArrayOutputStream.toByteArray()
 
         return withContext(Dispatchers.IO) {

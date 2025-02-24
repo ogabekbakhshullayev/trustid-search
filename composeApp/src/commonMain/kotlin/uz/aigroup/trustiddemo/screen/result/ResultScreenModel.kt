@@ -57,10 +57,10 @@ class ResultScreenModel : StateScreenModel<ResultState>(ResultState()), KoinComp
                         searchResult(taskId)
                     } else if (data?.state?.code == 1) {
                         if (data.data?.results.isNullOrEmpty()) {
-                            setState(result = data.state.message)
+                            setState(errorMessage = "User not found")
                         } else {
-                            setState(result = data.data?.results?.joinToString("\n"){
-                                it.personId.orEmpty()
+                            setState(result = data.data?.results?.joinToString("\n") { result ->
+                                result.personId.orEmpty()
                             })
                         }
                     } else {
