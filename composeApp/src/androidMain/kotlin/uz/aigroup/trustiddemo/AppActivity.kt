@@ -2,6 +2,7 @@ package uz.aigroup.trustiddemo
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.FragmentActivity
@@ -37,6 +38,8 @@ class AppActivity : FragmentActivity(), KoinComponent {
         enableEdgeToEdge()
 
         val onboarding = appSettings.getAccessToken().isEmpty()
+
+        Log.d("LOG_TAG", "onCreate: ${appSettings.getAccessToken()}")
 
         setContent { AppContent(onboarding) }
     }

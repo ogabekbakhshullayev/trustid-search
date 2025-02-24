@@ -34,6 +34,16 @@ fun HttpClientConfig<*>.configureKtor(
                     refreshToken = appSettings.getAccessToken()
                 )
             }
+            refreshTokens {
+                appSettings.setAccessToken("")
+
+                EventChannel.sendEvent(Event.Unauthorized)
+
+                BearerTokens(
+                    accessToken = "",
+                    refreshToken = ""
+                )
+            }
         }
     }
 }

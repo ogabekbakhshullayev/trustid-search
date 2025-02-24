@@ -56,7 +56,13 @@ class ResultScreenModel : StateScreenModel<ResultState>(ResultState()), KoinComp
                     if (statusCode == 202) {
                         searchResult(taskId)
                     } else if (data?.state?.code == 1) {
-                        setState(result = data.state.message)
+                        if (data.data?.results.isNullOrEmpty()) {
+                            setState(result = data.state.message)
+                        } else {
+                            setState(result = data.data?.results?.joinToString("\n"){
+                                it.personId.orEmpty()
+                            })
+                        }
                     } else {
                         setState(errorMessage = data?.state?.message)
                     }
