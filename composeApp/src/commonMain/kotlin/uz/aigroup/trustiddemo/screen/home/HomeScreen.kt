@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.model.rememberNavigatorScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
@@ -45,6 +46,12 @@ object HomeScreen : Screen {
 
         val screenModel = rememberScreenModel { HomeScreenModel() }
         val state by screenModel.state.collectAsState()
+
+        LifecycleEffect(
+            onStarted = {
+                screenModel.onEvent(HomeEvent.ChangeGroupId("322"))
+            }
+        )
 
         HomeScreenContent(
             state = state,
